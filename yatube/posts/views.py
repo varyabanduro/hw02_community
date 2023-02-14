@@ -1,27 +1,26 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Post, Group
 
+COUNT = 10
 
-# Create your views here.
+
 def index(request):
     template = 'posts/index.html'
-    title = "Последние обновления на сайте"
-    posts = Post.objects.order_by('-pub_date')[:10]
+    posts = Post.objects.all()[:COUNT]
     context = {
-        'title': title,
         'posts': posts
     }
     return render(request, template, context)
 
 
 def group_posts(request, slug):
-    group = get_object_or_404(Group, slug=slug)
+    groups = get_object_or_404(Group, slug=slug)
     template = 'posts/group_list.html'
-    title = f"Записи сообщества {group.title}"
-    posts = Post.objects.filter(group=group).order_by('-pub_date')[:10]
+    title = groups.title
+    posts = Post.objects.filter(group=groups).all()[:COUNT]
     context = {
         'title': title,
-        'group': group,
+        'groups': groups,
         'posts': posts
     }
     return render(request, template, context)
